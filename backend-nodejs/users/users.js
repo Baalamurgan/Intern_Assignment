@@ -14,50 +14,52 @@ const port = 5001;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/user", (req, res) => {
+app.post("/api/signup", (req, res) => {
   const newUser = new User({ ...req.body });
-  newUser
-    .save()
-    .then(() => {
-      res.send("New User created successfully!");
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send("Internal Server Error!");
-    });
+  newUser.save((err, newUser) => {
+    if (err) {
+      return res.status(404).json({
+        error: "Not able to save in DB!",
+      });
+    }
+    res.json(newUser);
+  });
 });
 
-app.get("/users", (req, res) => {
+app.get("/api/users", (req, res) => {
   User.find().exec((err, users) => {
     if (err) {
       return res.status(404).json({
         error: "No Users found",
       });
     }
-    res.json(users);
+    return res.json(users);
   });
 });
 
-app.put("/updateLike/:id/:userId", (req, res) => {
-  User.findById(req.params.userId)
-    .then((user) => {
+app.put("/api/updateLike/:id/:userId", (req, res) => {
+  User.findById(req.params.userId).exec((err, user) => {
+    if (err || !user) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    } else {
       axios
-        .put(`http://localhost:5002/updateContent/${req.params.id}`)
-        .then((content) => {
-          console.log(content);
-          res.json("Updated Like");
+        .put(`http://localhost:5002/api/updateContent/${req.params.id}`)
+        .then((updatedContent) => {
+          return res.json(updatedContent.data);
         })
         .catch((err) => {
-          console.log(err);
-          res.status(500).send("Unable to like");
+          return res.status(404).json({
+            error: "Could not update like",
+          });
         });
-    })
-    .catch((err) => {
-      res.status(500).send("User not found!");
-    });
+      return res.json(user);
+    }
+  });
 });
 
-app.get("/user/:id", (req, res) => {
+app.get("/api/user/:id", (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user) {

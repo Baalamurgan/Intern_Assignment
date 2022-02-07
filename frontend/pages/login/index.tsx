@@ -7,18 +7,19 @@ import { Main } from '@components/main';
 import useProvideAuth from 'src/auth/useUser';
 import { useRouter } from 'next/router';
 import Loader from '@components/loader';
+import { signup } from "../../src/backend/user/users"
 
 const Login: React.FC = () => {
     const [form] = Form.useForm();
     //TODO: check for backend validation error messages
-    const [isBackendError, setIsBackendError] = useState(false);
+    const [isBackendError, setIsBackendError] = useState<any>();
     const auth = useProvideAuth();
-    const Route = useRouter();
+    const Router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState<string>();
     useEffect(() => {
         const userId = localStorage.getItem("userId")
         if (userId) {
-            Route.push("/dashboard");
+            Router.push("/dashboard");
             setIsLoggedIn(userId);
         }
     }, [])
@@ -27,13 +28,33 @@ const Login: React.FC = () => {
         return <Loader />
     }
     const onFinish = (values: any) => {
-        auth.signup(values.email, values.password);
+        setIsBackendError(false);
+        signup({ userId: values.email, password: values.password })
+            .then((data) => {
+                if (data && data?.error) {
+                    setIsBackendError(data?.error);
+                    console.log(data?.error);
+                }
+                else {
+                    localStorage.setItem("userId", data?._id);
+                    localStorage.setItem("userName", data?.userId);
+                    Router.push("/dashboard");
+                    setIsLoggedIn(data?.userId)
+                }
+            })
     };
 
     return (
         <div>
             <Header />
             <Main />
+            {isBackendError && (
+                <h1
+                    style={{ textAlign: 'center', color: "red", fontSize: 32 }}
+                >
+                    {isBackendError}
+                </h1>
+            )}
             <Form form={form} layout="vertical" style={{ textAlign: 'center', minHeight: '40vw', paddingTop: '90px', paddingBottom: '90px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} onFinish={onFinish}>
                 <Form.Item
                     name="email"
@@ -61,7 +82,6 @@ const Login: React.FC = () => {
                             size='large'
                             htmlType="submit"
                             disabled={
-                                isBackendError ||
                                 !form.isFieldsTouched(true) ||
                                 !!form.getFieldsError().filter(({ errors }) => errors.length).length
                             }

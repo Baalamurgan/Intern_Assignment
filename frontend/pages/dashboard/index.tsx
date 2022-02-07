@@ -2,21 +2,20 @@ import { Footer } from "@components/footer";
 import { Header } from "@components/header";
 import Loader from "@components/loader";
 import { useRouter } from "next/router";
-import Posts from "pages/posts";
+import Posts from "pages/contents";
 import { useEffect, useState } from "react";
-import { useAuth } from "src/auth/useUser";
 
 const Dashboard: React.FC<any> = () => {
-    const auth = useAuth();
     const Route = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState<string>();
+    const [isLoggedIn, setIsLoggedIn] = useState<any>();
     useEffect(() => {
         const userId = localStorage.getItem("userId")
+        const userName = localStorage.getItem("userName")
         if (!userId) {
             Route.push("/login");
         }
         else {
-            setIsLoggedIn(userId);
+            setIsLoggedIn(userName);
         }
     }, [])
 
@@ -33,7 +32,7 @@ const Dashboard: React.FC<any> = () => {
             }}
             >
                 <h1>Dashboard</h1>
-                <h2>{isLoggedIn}</h2>
+                <h2>Hello, {isLoggedIn}</h2>
             </div>
             <Posts />
             <Footer />

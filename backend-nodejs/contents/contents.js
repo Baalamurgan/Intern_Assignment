@@ -14,41 +14,56 @@ const port = 5002;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/content", (req, res) => {
+app.post("/api/content", (req, res) => {
   const newContent = new Content({ ...req.body });
   newContent
     .save()
     .then(() => {
-      res.send("New Content created successfully!");
+      return res.send("New Content created successfully!");
     })
     .catch((err) => {
-      res.status(500).send("Internal Server Error!");
+      return res.status(500).send("Internal Server Error!");
     });
 });
 
-app.get("/contents", (req, res) => {
-  Content.find().exec((err, contents) => {
+app.get("/api/content/:id", (req, res) => {
+  Content.findById(req.params.id)
+    .then((content) => {
+      return res.json(content);
+    })
+    .catch((err) => {
+      return res.status(404).json({
+        error: "No Content found",
+      });
+    });
+});
+
+app.put("/api/updateContent/:id", (req, res) => {
+  Content.findOneAndUpdate(
+    { _id: req.params.id },
+    { $inc: { likes: 1 } },
+    { returnDocument: "after" }
+  ).exec((err, updatedContent) => {
     if (err) {
       return res.status(404).json({
-        error: "No Books found",
+        error: "No Content found",
       });
     }
-    res.json(contents);
+    return res.json(updatedContent);
   });
 });
 
-app.put("/updateContent/:id", (req, res) => {
-  console.log(req.params.id);
-  Content.updateOne({ _id: req.params.id }, { $inc: { likes: 1 } }).exec(
-    (err, updatedContent) => {
+app.get("/api/topcontents", (req, res) => {
+  Content.find()
+    .sort([["likes", "desc"]])
+    .exec((err, topcontents) => {
       if (err) {
         return res.status(404).json({
           error: "Error! Please try again",
         });
       }
-      res.json(updatedContent);
-    }
-  );
+      return res.json(topcontents);
+    });
 });
 
 app.listen(port, () => {

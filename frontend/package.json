@@ -18,6 +18,8 @@
         "@reduxjs/toolkit": "^1.6.0",
         "antd": "^4.10.2",
         "axios": "^0.21.1",
+        "dotenv": "^16.0.0",
+        "moment": "^2.29.1",
         "next": "12.0.7",
         "next-compose-plugins": "^2.2.1",
         "prettier": "^2.2.1",
