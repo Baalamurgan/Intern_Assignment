@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AppProps } from "next/app";
 import "antd/dist/antd.css";
 import { StyledThemeProvider } from "@definitions/styled-components";
