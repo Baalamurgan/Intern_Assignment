@@ -1,23 +1,22 @@
-require("dotenv").config();
-const express = require("express");
-const axios = require("axios");
-const { check, validationResult } = require("express-validator");
-const csvtojson = require("csvtojson");
-const formidable = require("formidable");
+require("dotenv").config(); //for accessing .env variables
+const axios = require("axios"); //to call API's on other ports/services
+const { check, validationResult } = require("express-validator"); //validations on API's
+const express = require("express"); //express to write API's
+const csvtojson = require("csvtojson"); //csvtojson to convert csv to json
+const formidable = require("formidable"); //formidable to read files - Ingestion
+const bodyParser = require("body-parser"); //to return JSON parse
+const cors = require("cors"); //allows to call API's on other ports/services
 
 // Connect
 require("../db/db");
-
 const User = require("./model");
-const bodyParser = require("body-parser");
-const cors = require("cors");
 
 const app = express();
 const port = 5001;
 app.use(cors());
 app.use(bodyParser.json());
 
-//Ingest users to DB
+//INSERT users to DB from CSV
 app.post("/api/uploadUsers", (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
@@ -58,6 +57,7 @@ app.post("/api/uploadUsers", (req, res) => {
   });
 });
 
+//SIGNUP API
 app.post(
   "/api/signup",
   check("userId").isEmail().withMessage("Please enter a proper mailId"),
@@ -105,6 +105,7 @@ app.post(
   }
 );
 
+//GET all users
 app.get("/api/users", (req, res) => {
   User.find().exec((err, users) => {
     if (err) {
@@ -120,6 +121,7 @@ app.get("/api/users", (req, res) => {
   });
 });
 
+//UPDATE API
 app.put("/api/updateLike/:id/:userId", async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
@@ -147,6 +149,7 @@ app.put("/api/updateLike/:id/:userId", async (req, res) => {
   });
 });
 
+//GET a user
 app.get("/api/user/:id", (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
@@ -161,6 +164,7 @@ app.get("/api/user/:id", (req, res) => {
     });
 });
 
+//RUN User Service
 app.listen(port, () => {
   console.log(`Up and Running on port ${port} - This is User service`);
 });

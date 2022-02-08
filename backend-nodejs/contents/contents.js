@@ -1,22 +1,20 @@
-require("dotenv").config();
-const express = require("express");
-const csvtojson = require("csvtojson");
-const formidable = require("formidable");
+require("dotenv").config(); //for accessing .env variables
+const express = require("express"); //express to write API's
+const csvtojson = require("csvtojson"); //csvtojson to convert csv to json
+const formidable = require("formidable"); //formidable to read files - Ingestion
+const bodyParser = require("body-parser"); //to return JSON parse
+const cors = require("cors"); //allows to call API's on other ports/services
 
-// Connect
+// Connect to DB
 require("../db/db");
-
 const Content = require("./model");
-
-const bodyParser = require("body-parser");
-const cors = require("cors");
 
 const app = express();
 const port = 5002;
 app.use(cors());
 app.use(bodyParser.json());
 
-//Ingest contents to DB
+//INSERT contents to DB from CSV
 app.post("/api/uploadContents", (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
@@ -59,6 +57,7 @@ app.post("/api/uploadContents", (req, res) => {
   });
 });
 
+//POST a new content to DB
 app.post("/api/content", (req, res) => {
   const newContent = new Content({ ...req.body });
   newContent
@@ -71,6 +70,7 @@ app.post("/api/content", (req, res) => {
     });
 });
 
+//GET a content
 app.get("/api/content/:id", (req, res) => {
   Content.findById(req.params.id)
     .then((content) => {
@@ -83,6 +83,7 @@ app.get("/api/content/:id", (req, res) => {
     });
 });
 
+//UPDATE likes of a content
 app.put("/api/updateContent/:id", (req, res) => {
   Content.findOneAndUpdate(
     { _id: req.params.id },
@@ -98,6 +99,7 @@ app.put("/api/updateContent/:id", (req, res) => {
   });
 });
 
+//TOPCONTENTS API
 app.get("/api/topcontents", (req, res) => {
   Content.find()
     .sort([["likes", "desc"]])
@@ -115,6 +117,7 @@ app.get("/api/topcontents", (req, res) => {
     });
 });
 
+//RUN Content Service
 app.listen(port, () => {
   console.log(`Up and Running on port ${port}- This is Content service`);
 });

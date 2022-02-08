@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-// const { Schema } = mongoose;
 const ContentSchema = mongoose.Schema(
   {
     title: {
@@ -20,13 +19,11 @@ const ContentSchema = mongoose.Schema(
     },
     userId: {
       type: String,
-      // type: Schema.Types.ObjectId,
-      // ref: "User",
       required: true,
     },
   },
   { timestamps: true }
 );
-const Content = mongoose.model("Content", ContentSchema);
 
+const Content = mongoose.model("Content", ContentSchema);
 module.exports = Content;
