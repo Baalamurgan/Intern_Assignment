@@ -1,5 +1,7 @@
 require("dotenv").config();
 const express = require("express");
+const csvtojson = require("csvtojson");
+const formidable = require("formidable");
 
 // Connect
 require("../db/db");
@@ -13,6 +15,49 @@ const app = express();
 const port = 5002;
 app.use(cors());
 app.use(bodyParser.json());
+
+//Ingest contents to DB
+app.post("/api/uploadContents", (req, res) => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields, file) => {
+    if (err) {
+      console.log("err:", err);
+      return res.status(404).json({
+        error: "Cannot injest CSV",
+      });
+    }
+
+    if (file.contentsCSV) {
+      var arrayToInsert = [];
+      const contentsCSV = file.contentsCSV;
+      csvtojson()
+        .fromFile(contentsCSV.filepath)
+        .then((contents) => {
+          contents.forEach((content, index) => {
+            arrayToInsert.push(content);
+          });
+          Content.insertMany(arrayToInsert, (err, result) => {
+            if (err) {
+              const insertedContents = [];
+              err.insertedDocs?.forEach((content) => {
+                insertedContents.push(content?.title);
+              });
+              return res.status(404).json({
+                error: "Not able to save all contents in DB!",
+                insertedContents: insertedContents,
+              });
+            }
+            return res.json(result);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  });
+});
 
 app.post("/api/content", (req, res) => {
   const newContent = new Content({ ...req.body });
@@ -58,7 +103,7 @@ app.get("/api/topcontents", (req, res) => {
     .sort([["likes", "desc"]])
     .exec((err, topcontents) => {
       if (err) {
-        return res.status(404).json({
+        return res.json(404).json({
           error: "Error! Please try again",
         });
       }

@@ -5,6 +5,7 @@ import Content from './[cid]';
 import { useEffect, useState } from 'react';
 import Loader from '@components/loader';
 import { topContents } from "../../src/backend/content/contents"
+import { useQuery } from 'react-query';
 
 const { Meta } = Card;
 
@@ -17,58 +18,36 @@ interface Content {
 
 const Contents: React.FC = () => {
     const Router = useRouter();
-    const Route = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState<string>();
-    const [isBackendError, setIsBackendError] = useState<any>();
-    const [contents, setContents] = useState<Content[]>([]);
-    useEffect(() => {
-        const userId = localStorage.getItem("userId")
-        if (!userId) {
-            Route.push("/login");
-        }
-        else {
-            setIsBackendError(false)
-            setIsLoggedIn(userId);
-            topContents()
-                .then((data) => {
-                    if (!data || data.length === 0) {
-                        setIsBackendError("No Contents found");
-                    }
-                    else if (data?.error) {
-                        setIsBackendError(data?.error)
-                    }
-                    else {
-                        setContents(data);
-                    }
-                })
-        }
-    }, [])
+    const { data, isLoading, isError, error } = useQuery<Content[], any>("topCentent", async () => await fetch("http://localhost:5002/api/topcontents").then(data => data.json()))
 
-    if (!isLoggedIn) {
+    if (isLoading) {
         return <Loader />
     }
 
-    const handleContentRoute: React.FC<string> = (id: string) => {
+    if (isError) {
+        return <div>iledfa</div>
+    }
+
+    // unable to understand it never seen this befroe
+    const handleContentRoute = (id: string) => {
         Router.push({
             pathname: '/contents/[cid]',
             query: { cid: id },
         })
-        return (
-            <Content />
-        )
+
     }
 
     return (
         <div>
-            {isBackendError && (
+            {isError && (
                 <h1
                     style={{ textAlign: 'center', color: "red", fontSize: 32 }}
                 >
-                    {isBackendError}
+                    {error?.error}
                 </h1>
             )}
             <Row style={{ flex: 1 }} justify="center" align='middle'>
-                {(contents ?? []).map((content) => (
+                {data?.map((content) => (
                     <Col key={content._id}>
                         <Card
                             hoverable

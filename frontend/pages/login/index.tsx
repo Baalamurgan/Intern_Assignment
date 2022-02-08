@@ -31,15 +31,21 @@ const Login: React.FC = () => {
         setIsBackendError(false);
         signup({ userId: values.email, password: values.password })
             .then((data) => {
-                if (data && data?.error) {
+                console.log(data)
+                if (!data) {
+                    setIsBackendError("Error! Please try again");
+                }
+                else if (data && data?.error) {
                     setIsBackendError(data?.error);
-                    console.log(data?.error);
                 }
                 else {
                     localStorage.setItem("userId", data?._id);
                     localStorage.setItem("userName", data?.userId);
-                    Router.push("/dashboard");
-                    setIsLoggedIn(data?.userId)
+                    setIsBackendError("Logging in")
+                    setTimeout(() => {
+                        setIsLoggedIn(data?.userId)
+                        Router.push("/dashboard");
+                    }, 1500)
                 }
             })
     };
@@ -55,7 +61,7 @@ const Login: React.FC = () => {
                     {isBackendError}
                 </h1>
             )}
-            <Form form={form} layout="vertical" style={{ textAlign: 'center', minHeight: '40vw', paddingTop: '90px', paddingBottom: '90px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} onFinish={onFinish}>
+            <Form form={form} layout="vertical" style={{ textAlign: 'center', minHeight: '38vw', paddingTop: '90px', paddingBottom: '90px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} onFinish={onFinish}>
                 <Form.Item
                     name="email"
                     style={{ width: '80vw' }}

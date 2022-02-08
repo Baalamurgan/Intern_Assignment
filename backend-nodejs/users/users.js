@@ -1,6 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
+const { check, validationResult } = require("express-validator");
+const csvtojson = require("csvtojson");
+const formidable = require("formidable");
 
 // Connect
 require("../db/db");
@@ -14,17 +17,93 @@ const port = 5001;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/api/signup", (req, res) => {
-  const newUser = new User({ ...req.body });
-  newUser.save((err, newUser) => {
+//Ingest users to DB
+app.post("/api/uploadUsers", (req, res) => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields, file) => {
     if (err) {
+      console.log("err:", err);
       return res.status(404).json({
-        error: "Not able to save in DB!",
+        error: "Cannot injest CSV",
       });
     }
-    res.json(newUser);
+
+    if (file.usersCSV) {
+      var arrayToInsert = [];
+      const usersCSV = file.usersCSV;
+      csvtojson()
+        .fromFile(usersCSV.filepath)
+        .then((users) => {
+          users.forEach((user, index) => {
+            arrayToInsert.push(user);
+          });
+          User.insertMany(arrayToInsert, (err, result) => {
+            if (err) {
+              console.log("err:", err);
+              const insertedUsers = [];
+              err.insertedDocs?.forEach((user) => {
+                insertedUsers.push(user?.userId);
+              });
+              return res.status(404).json({
+                error: "Not able to save all users in DB!",
+                insertedUsers: insertedUsers,
+              });
+            }
+            return res.json(result);
+          });
+        });
+    }
   });
 });
+
+app.post(
+  "/api/signup",
+  check("userId").isEmail().withMessage("Please enter a proper mailId"),
+  check("password")
+    .isLength({ min: 10 })
+    .withMessage("Password must be at least 10 chars long")
+    .matches(/\d/)
+    .withMessage("Password must contain atleast 1 number")
+    .matches(/[A-Z]/)
+    .withMessage("Password must contain atleast 1 upper case")
+    .matches(/[a-z]/)
+    .withMessage("Password must contain atleast 1 lower case")
+    .matches(/[ -\/:-@\[-\`{-~ ]/)
+    .withMessage("Password must contain atleast 1 special character"),
+  async (req, res) => {
+    const errors = validationResult(req);
+    {
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ error: errors.array()[0].msg });
+      }
+    }
+
+    //For existing user
+    try {
+      const user = await User.findOne({
+        userId: req.body.userId,
+      });
+      if (user) {
+        return res.json(user);
+      }
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error." });
+    }
+
+    //Create new User
+    const newUser = new User({ ...req.body });
+    newUser.save((err, newUser) => {
+      if (err) {
+        return res.status(404).json({
+          error: "Not able to save in DB!",
+        });
+      }
+      return res.json(newUser);
+    });
+  }
+);
 
 app.get("/api/users", (req, res) => {
   User.find().exec((err, users) => {
@@ -63,13 +142,13 @@ app.get("/api/user/:id", (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user) {
-        res.json(user);
+        return res.json(user);
       } else {
-        res.status(404).send("Users not found");
+        return res.status(404).send("Users not found");
       }
     })
     .catch((err) => {
-      res.status(500).send("Internal Server Error!");
+      return res.status(500).send("Internal Server Error!");
     });
 });
 
