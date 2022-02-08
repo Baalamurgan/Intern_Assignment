@@ -67,7 +67,7 @@ app.post("/api/content", (req, res) => {
       return res.send("New Content created successfully!");
     })
     .catch((err) => {
-      return res.status(500).send("Internal Server Error!");
+      return res.status(404).send("Internal Server Error!");
     });
 });
 
@@ -103,8 +103,12 @@ app.get("/api/topcontents", (req, res) => {
     .sort([["likes", "desc"]])
     .exec((err, topcontents) => {
       if (err) {
-        return res.json(404).json({
+        return res.status(404).json({
           error: "Error! Please try again",
+        });
+      } else if (topcontents.length <= 0) {
+        return res.status(404).json({
+          error: "No Contents found",
         });
       }
       return res.json(topcontents);

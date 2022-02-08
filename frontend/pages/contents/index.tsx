@@ -1,13 +1,16 @@
 import { LikeFilled } from '@ant-design/icons';
-import { Card, Col, Row } from 'antd';
+import { Card, Col, Row, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import Content from './[cid]';
-import { useEffect, useState } from 'react';
-import Loader from '@components/loader';
-import { topContents } from "../../src/backend/content/contents"
 import { useQuery } from 'react-query';
+import axios from 'axios';
+import Text from 'antd/lib/typography/Text';
 
 const { Meta } = Card;
+
+const cardStyle = {
+    width: 240, margin: '10px'
+}
 
 interface Content {
     _id: string;
@@ -18,41 +21,33 @@ interface Content {
 
 const Contents: React.FC = () => {
     const Router = useRouter();
-    const { data, isLoading, isError, error } = useQuery<Content[], any>("topCentent", async () => await fetch("http://localhost:5002/api/topcontents").then(data => data.json()))
+    const { data, isLoading, error } = useQuery<Content[], any>("topCentent", async () => await axios.get("http://localhost:5002/api/topcontents").then(data => data.data), {
+        refetchOnWindowFocus: false,
+    })
 
     if (isLoading) {
-        return <Loader />
+        return <Spin size="large" />
     }
 
-    if (isError) {
-        return <div>iledfa</div>
-    }
-
-    // unable to understand it never seen this befroe
     const handleContentRoute = (id: string) => {
         Router.push({
             pathname: '/contents/[cid]',
             query: { cid: id },
         })
-
     }
 
     return (
         <div>
-            {isError && (
-                <h1
-                    style={{ textAlign: 'center', color: "red", fontSize: 32 }}
-                >
-                    {error?.error}
-                </h1>
+            {true && (
+                <Text type="danger">{error?.response?.data?.error}</Text>
             )}
-            <Row style={{ flex: 1 }} justify="center" align='middle'>
-                {data?.map((content) => (
+            <Row justify="center" align='middle'>
+                {data?.map((content: Content) => (
                     <Col key={content._id}>
                         <Card
                             hoverable
                             onClick={() => handleContentRoute(content._id)}
-                            style={{ width: 240, margin: '10px' }}
+                            style={cardStyle}
                             cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
                             actions={[
                                 <LikeFilled key="likeFilled" />,

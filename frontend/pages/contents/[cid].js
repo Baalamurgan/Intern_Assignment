@@ -1,19 +1,30 @@
 import { BackwardFilled, LikeOutlined } from "@ant-design/icons";
-import { Card, Col, Row } from "antd";
+import { Button, Card, Col, Divider, Image, Row, Typography } from "antd";
 import { useRouter } from "next/router";
-import { Header } from "@components/header";
-import { Button } from "@components/button";
 import { getContent } from "../../src/backend/content/contents";
 import { update } from "../../src/backend/user/users";
 import { useEffect, useState } from "react";
 import moment from "moment";
+
 const { Meta } = Card;
+const { Title } = Typography;
 
 const gridStyle = {
     width: "100%",
 };
 
-const ContentLayout = () => {
+const backButtonStyle = {
+    position: "fixed",
+    left: 0,
+    top: 80,
+};
+
+const dateStyle = {
+    marginTop: "8px",
+    marginBottom: "0",
+};
+
+const Content = () => {
     const Router = useRouter();
     const { cid } = Router.query;
     const [content, setContent] = useState();
@@ -61,65 +72,64 @@ const ContentLayout = () => {
 
     return (
         <div>
-            <Header />
-            {isBackendError && (
-                <h1 style={{ textAlign: "center", color: "red", fontSize: 32 }}>
-                    {isBackendError}
-                </h1>
-            )}
-            <div style={{ paddingTop: "20px" }}>
-                <Button
-                    type="primary"
-                    size="large"
-                    style={{ position: "fixed", left: 0, top: 80 }}
-                    onClick={() => Router.push("/dashboard")}
-                >
-                    <BackwardFilled key="backwardFilled" />
-                </Button>
-                <Row style={{ flex: 1 }} justify="center">
-                    <Col md={10} xs={20}>
-                        <Card
-                            style={{ height: "80%" }}
-                            cover={
-                                <img
-                                    alt="example"
-                                    style={{ objectFit: "cover" }}
-                                    src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                                />
-                            }
-                            actions={[
-                                <LikeOutlined
-                                    key="likeOutlined"
-                                    onClick={() => updateLikes(content?._id)}
-                                />,
-                                <p>{content?.likes}</p>,
-                            ]}
-                        >
-                            <Card.Grid style={gridStyle}>
-                                <Meta
-                                    title={content?.title}
-                                    description={content?.story}
-                                />
-                                <p
-                                    style={{
-                                        marginTop: 8,
-                                        marginBottom: 0,
-                                    }}
-                                >
-                                    {moment(content?.createdAt).fromNow()}
-                                </p>
-                            </Card.Grid>
-                        </Card>
-                    </Col>
-                </Row>
-            </div>
+            <Row justify="center" align="middle">
+                <Divider orientation="center">
+                    {isBackendError && (
+                        <Title level={1} type="danger">
+                            {isBackendError}
+                        </Title>
+                    )}
+                </Divider>
+                <div>
+                    <Button
+                        type="primary"
+                        size="large"
+                        style={backButtonStyle}
+                        onClick={() => Router.push("/dashboard")}
+                    >
+                        <BackwardFilled key="backwardFilled" />
+                    </Button>
+                    <Row justify="center">
+                        <Col md={10} xs={20}>
+                            <Card
+                                cover={
+                                    <Image
+                                        style={{ objectFit: "cover" }}
+                                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+                                    />
+                                }
+                                actions={[
+                                    <LikeOutlined
+                                        key="likeOutlined"
+                                        onClick={() =>
+                                            updateLikes(content?._id)
+                                        }
+                                    />,
+                                    <Title level={5} strong={true}>
+                                        {content?.likes}
+                                    </Title>,
+                                ]}
+                            >
+                                <Card.Grid style={gridStyle}>
+                                    <Meta
+                                        title={content?.title}
+                                        description={content?.story}
+                                    />
+                                    <Title
+                                        level={5}
+                                        mark={true}
+                                        style={dateStyle}
+                                    >
+                                        {moment(content?.createdAt).fromNow()}
+                                    </Title>
+                                </Card.Grid>
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
+            </Row>
         </div>
     );
-};
-
-const Content = () => {
-    const Router = useRouter();
-    return <ContentLayout />;
 };
 
 export default Content;

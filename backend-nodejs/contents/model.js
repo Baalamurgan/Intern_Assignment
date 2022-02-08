@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+// const { Schema } = mongoose;
 const ContentSchema = mongoose.Schema(
   {
     title: {
@@ -19,8 +19,10 @@ const ContentSchema = mongoose.Schema(
       default: 0,
     },
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
+      // type: Schema.Types.ObjectId,
+      // ref: "User",
+      required: true,
     },
   },
   { timestamps: true }

@@ -109,6 +109,10 @@ app.get("/api/users", (req, res) => {
   User.find().exec((err, users) => {
     if (err) {
       return res.status(404).json({
+        error: "Error! Please try again",
+      });
+    } else if (users.length <= 0) {
+      return res.status(404).json({
         error: "No Users found",
       });
     }
