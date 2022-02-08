@@ -116,25 +116,30 @@ app.get("/api/users", (req, res) => {
   });
 });
 
-app.put("/api/updateLike/:id/:userId", (req, res) => {
-  User.findById(req.params.userId).exec((err, user) => {
-    if (err || !user) {
-      return res.status(404).json({
-        error: "User not found",
-      });
-    } else {
-      axios
-        .put(`http://localhost:5002/api/updateContent/${req.params.id}`)
-        .then((updatedContent) => {
+app.put("/api/updateLike/:id/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (user) {
+      try {
+        const updatedContent = await axios.put(
+          `http://localhost:5002/api/updateContent/${req.params.id}`
+        );
+        if (updatedContent) {
           return res.json(updatedContent.data);
-        })
-        .catch((err) => {
-          return res.status(404).json({
-            error: "Could not update like",
-          });
+        }
+      } catch {
+        return res.status(404).json({
+          error: "Could not update like",
         });
-      return res.json(user);
+      }
     }
+  } catch (error) {
+    return res.status(404).json({
+      error: "User not found",
+    });
+  }
+  return res.status(404).json({
+    error: "Internal server error",
   });
 });
 
