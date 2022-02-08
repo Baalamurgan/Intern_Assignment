@@ -28,7 +28,6 @@ const Login: React.FC = () => {
         setSuccess(false);
         signup({ userId: values.email, password: values.password })
             .then((data) => {
-                console.log(data)
                 if (!data) {
                     setIsBackendError("Error! Please try again");
                 }
