@@ -121,6 +121,19 @@ app.get("/api/users", (req, res) => {
   });
 });
 
+//GET a user
+app.get("/api/user/:id", (req, res) => {
+  User.findById(req.params.id)
+    .then((user) => {
+      return res.json(user);
+    })
+    .catch((err) => {
+      return res.status(404).json({
+        error: "No User found",
+      });
+    });
+});
+
 //UPDATE API
 app.put("/api/updateLike/:id/:userId", async (req, res) => {
   try {
