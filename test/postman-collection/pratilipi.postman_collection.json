@@ -1,0 +1,181 @@
+{
+	"variables": [],
+	"info": {
+		"name": "pratilipi",
+		"_postman_id": "7d65b637-df4c-c514-3cd9-b20c9300d103",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"description": "",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"url": "localhost:5001/api/signup",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"userId\":\"baalamurgn2307@gmail.com\",\"password\":\"aasdasdsd\"}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "User",
+					"request": {
+						"url": "localhost:5001/api/user/6202b984061efd0f6c1d6be2",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Users",
+					"request": {
+						"url": "localhost:5001/api/users",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"url": "localhost:5001/api/updateLike/61fffb84240f2eb998286059/62014ad84dd470e8103186c5",
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "UploadUsers",
+					"request": {
+						"url": "localhost:5001/api/uploadUsers",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "usersCSV",
+									"value": "",
+									"description": "",
+									"type": "file"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "contents",
+			"description": "",
+			"item": [
+				{
+					"name": "Book",
+					"request": {
+						"url": "localhost:5002/api/content",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Book1\",\n\t\"story\": \"This is Book1 and its story\",\n\t\"userId\": \"baalamug@gmail.com\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"url": "localhost:5002/updateContent/61fffb84240f2eb998286059",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "UploadContents",
+					"request": {
+						"url": "localhost:5002/api/uploadContents",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "contentsCSV",
+									"description": "",
+									"type": "file",
+									"src": "ContentsSample.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Book",
+					"request": {
+						"url": "localhost:5002/api/content/6201710a80a59275d95c3619",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Top Contents",
+					"request": {
+						"url": "localhost:5002/api/topcontents",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,42 +1,41 @@
-import { Footer } from "@components/footer";
-import { Header } from "@components/header";
-import Loader from "@components/loader";
+import { Typography, Divider, Row, Spin } from 'antd';
 import { useRouter } from "next/router";
-import Posts from "pages/posts";
+import Posts from "pages/contents";
 import { useEffect, useState } from "react";
-import { useAuth } from "src/auth/useUser";
+
+const { Title } = Typography;
 
 const Dashboard: React.FC<any> = () => {
-    const auth = useAuth();
     const Route = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState<string>();
+    const [isLoggedIn, setIsLoggedIn] = useState<any>();
     useEffect(() => {
         const userId = localStorage.getItem("userId")
+        const userName = localStorage.getItem("userName")
         if (!userId) {
             Route.push("/login");
         }
         else {
-            setIsLoggedIn(userId);
+            setIsLoggedIn(userName);
         }
     }, [])
 
     if (!isLoggedIn) {
-        return <Loader />
+        return <Spin size="large" />
     }
 
     return (
         <>
-            <Header />
-            <div style={{
-                backgroundColor: "#fff",
-                textAlign: "center"
-            }}
-            >
-                <h1>Dashboard</h1>
-                <h2>{isLoggedIn}</h2>
-            </div>
-            <Posts />
-            <Footer />
+            <Row justify='center' align='middle'>
+                <Divider orientation='center'>
+                    <Title level={2}  >
+                        Dashboard
+                    </Title>
+                    <Title level={2} type="success">
+                        Hello, {isLoggedIn}
+                    </Title>
+                </Divider>
+                <Posts />
+            </Row>
         </>
     );
 };

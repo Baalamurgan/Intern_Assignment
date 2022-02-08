@@ -68,7 +68,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "pages/posts/[pid].js"
+    "pages/contents/[pid].js"
   ],
   "exclude": [
     "node_modules",

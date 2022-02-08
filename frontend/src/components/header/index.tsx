@@ -8,6 +8,7 @@ export const Header: React.FC = () => {
 
     const logout = () => {
         localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
         Router.replace('/login');
     }
 
