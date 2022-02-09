@@ -1,6 +1,8 @@
 import * as React from "react";
 
-function SvgLinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
+const SvgLinkedinIcon: React.FC<any> = (
+    props: React.SVGProps<SVGSVGElement>,
+) => {
     return (
         <svg
             aria-hidden="true"
@@ -19,6 +21,6 @@ function SvgLinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
             />
         </svg>
     );
-}
+};
 
 export default SvgLinkedinIcon;

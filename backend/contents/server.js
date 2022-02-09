@@ -6,8 +6,8 @@ const bodyParser = require("body-parser"); //to return JSON parse
 const cors = require("cors"); //allows to call API's on other ports/services
 
 // Connect to DB
-require("../db/db");
-const Content = require("./model");
+require("./db/db");
+const Content = require("./models/model");
 
 const app = express();
 const port = 5002;
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //INSERT contents to DB from CSV
-app.post("/api/uploadContents", (req, res) => {
+app.post("/uploadContents", (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
 
@@ -58,7 +58,7 @@ app.post("/api/uploadContents", (req, res) => {
 });
 
 //POST a new content to DB
-app.post("/api/content", (req, res) => {
+app.post("/content", (req, res) => {
   const newContent = new Content({ ...req.body });
   newContent
     .save()
@@ -71,7 +71,7 @@ app.post("/api/content", (req, res) => {
 });
 
 //GET a content
-app.get("/api/content/:id", (req, res) => {
+app.get("/content/:id", (req, res) => {
   Content.findById(req.params.id)
     .then((content) => {
       return res.json(content);
@@ -84,7 +84,7 @@ app.get("/api/content/:id", (req, res) => {
 });
 
 //UPDATE likes of a content
-app.put("/api/updateContent/:id", (req, res) => {
+app.put("/updateContent/:id", (req, res) => {
   Content.findOneAndUpdate(
     { _id: req.params.id },
     { $inc: { likes: 1 } },
@@ -100,7 +100,7 @@ app.put("/api/updateContent/:id", (req, res) => {
 });
 
 //TOPCONTENTS API
-app.get("/api/topcontents", (req, res) => {
+app.get("/topcontents", (req, res) => {
   Content.find()
     .sort([["likes", "desc"]])
     .exec((err, topcontents) => {

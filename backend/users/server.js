@@ -8,8 +8,8 @@ const bodyParser = require("body-parser"); //to return JSON parse
 const cors = require("cors"); //allows to call API's on other ports/services
 
 // Connect
-require("../db/db");
-const User = require("./model");
+require("./db/db");
+const User = require("./models/model");
 
 const app = express();
 const port = 5001;
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //INSERT users to DB from CSV
-app.post("/api/uploadUsers", (req, res) => {
+app.post("/uploadUsers", (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
 
@@ -59,7 +59,7 @@ app.post("/api/uploadUsers", (req, res) => {
 
 //SIGNUP API
 app.post(
-  "/api/signup",
+  "/signup",
   check("userId").isEmail().withMessage("Please enter a proper mailId"),
   check("password")
     .isLength({ min: 10 })
@@ -106,7 +106,7 @@ app.post(
 );
 
 //GET all users
-app.get("/api/users", (req, res) => {
+app.get("/users", (req, res) => {
   User.find().exec((err, users) => {
     if (err) {
       return res.status(404).json({
@@ -122,7 +122,7 @@ app.get("/api/users", (req, res) => {
 });
 
 //GET a user
-app.get("/api/user/:id", (req, res) => {
+app.get("/user/:id", (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       return res.json(user);
@@ -135,13 +135,13 @@ app.get("/api/user/:id", (req, res) => {
 });
 
 //UPDATE API
-app.put("/api/updateLike/:id/:userId", async (req, res) => {
+app.put("/updateLike/:contentId/:userId", async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     if (user) {
       try {
         const updatedContent = await axios.put(
-          `http://localhost:5002/api/updateContent/${req.params.id}`
+          `http://content/updateContent/${req.params.contentId}`
         );
         if (updatedContent) {
           return res.json(updatedContent.data);
@@ -163,7 +163,7 @@ app.put("/api/updateLike/:id/:userId", async (req, res) => {
 });
 
 //GET a user
-app.get("/api/user/:id", (req, res) => {
+app.get("/user/:id", (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user) {
