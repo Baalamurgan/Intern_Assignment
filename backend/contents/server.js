@@ -62,11 +62,13 @@ app.post("/content", (req, res) => {
   const newContent = new Content({ ...req.body });
   newContent
     .save()
-    .then(() => {
-      return res.send("New Content created successfully!");
+    .then((newContent) => {
+      return res.json(newContent);
     })
     .catch((err) => {
-      return res.status(404).send("Internal Server Error!");
+      return res
+        .status(404)
+        .send("Internal Server Error! Duplicate record found");
     });
 });
 

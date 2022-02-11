@@ -46,7 +46,7 @@ app.post("/uploadUsers", (req, res) => {
                 insertedUsers.push(user?.userId);
               });
               return res.status(404).json({
-                error: "Not able to save all users in DB!",
+                error: "Not able to save all users! Duplicate record found",
                 insertedUsers: insertedUsers,
               });
             }
@@ -141,14 +141,14 @@ app.put("/updateLike/:contentId/:userId", async (req, res) => {
     if (user) {
       try {
         const updatedContent = await axios.put(
-          `http://content/updateContent/${req.params.contentId}`
+          `http://contents:5002/updateContent/${req.params.contentId}`
         );
         if (updatedContent) {
           return res.json(updatedContent.data);
         }
-      } catch {
+      } catch (err) {
         return res.status(404).json({
-          error: "Could not update like",
+          error: "Could not like content",
         });
       }
     }
@@ -160,21 +160,6 @@ app.put("/updateLike/:contentId/:userId", async (req, res) => {
   return res.status(404).json({
     error: "Internal server error",
   });
-});
-
-//GET a user
-app.get("/user/:id", (req, res) => {
-  User.findById(req.params.id)
-    .then((user) => {
-      if (user) {
-        return res.json(user);
-      } else {
-        return res.status(404).send("Users not found");
-      }
-    })
-    .catch((err) => {
-      return res.status(500).send("Internal Server Error!");
-    });
 });
 
 //RUN User Service
