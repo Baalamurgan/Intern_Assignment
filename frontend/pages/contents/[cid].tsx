@@ -3,33 +3,33 @@ import { Button, Card, Col, Divider, Image, Row, Typography } from "antd";
 import { useRouter } from "next/router";
 import { getContent } from "../../src/backend/content/contents";
 import { update } from "../../src/backend/user/users";
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import moment from "moment";
 
 const { Meta } = Card;
 const { Title } = Typography;
 
-const gridStyle = {
+const gridStyle: CSSProperties = {
     width: "100%",
 };
 
-const backButtonStyle = {
+const backButtonStyle: CSSProperties = {
     position: "fixed",
     left: 0,
     top: 80,
 };
 
-const dateStyle = {
+const dateStyle: CSSProperties = {
     marginTop: "8px",
     marginBottom: "0",
 };
 
-const Content = () => {
+const Content: React.FC = () => {
     const Router = useRouter();
     const { cid } = Router.query;
-    const [content, setContent] = useState();
-    const [isBackendError, setIsBackendError] = useState();
-    const updateLikes = (id) => {
+    const [content, setContent] = useState<any>();
+    const [isBackendError, setIsBackendError] = useState<any>();
+    const updateLikes = (id: string) => {
         const userId = localStorage.getItem("userId");
         setIsBackendError(false);
         if (userId) {
@@ -105,9 +105,7 @@ const Content = () => {
                                             updateLikes(content?._id)
                                         }
                                     />,
-                                    <Title level={5} strong={true}>
-                                        {content?.likes}
-                                    </Title>,
+                                    <Title level={5}>{content?.likes}</Title>,
                                 ]}
                             >
                                 <Card.Grid style={gridStyle}>

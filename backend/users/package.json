@@ -1,13 +1,11 @@
 {
-  "name": "backend-nodejs",
+  "name": "users",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "dev-user": "nodemon users/users.js",
-    "dev-content": "nodemon contents/contents.js"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",

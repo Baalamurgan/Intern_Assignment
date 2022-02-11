@@ -1,6 +1,8 @@
 import * as React from "react";
 
-function SvgTwitterIcon(props: React.SVGProps<SVGSVGElement>) {
+const SvgTwitterIcon: React.FC<any> = (
+    props: React.SVGProps<SVGSVGElement>,
+) => {
     return (
         <svg
             aria-hidden="true"
@@ -19,6 +21,6 @@ function SvgTwitterIcon(props: React.SVGProps<SVGSVGElement>) {
             />
         </svg>
     );
-}
+};
 
 export default SvgTwitterIcon;

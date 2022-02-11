@@ -1,9 +1,6 @@
 import React, { CSSProperties } from "react";
 import { Space } from "antd";
-import {
-    TwitterOutlined,
-    LinkedinOutlined,
-} from "@ant-design/icons";
+import { TwitterOutlined, LinkedinOutlined } from "@ant-design/icons";
 
 export const Footer: React.FC = () => {
     const iconStyle: CSSProperties = {
@@ -18,9 +15,9 @@ export const Footer: React.FC = () => {
                 textAlign: "center",
                 paddingTop: 20,
                 paddingBottom: 20,
-                position: 'relative',
+                position: "relative",
                 bottom: 0,
-                width: '100%'
+                width: "100%",
             }}
         >
             <Space direction="vertical" size="large">
@@ -29,7 +26,12 @@ export const Footer: React.FC = () => {
                     target="_blank"
                     style={iconStyle}
                 >
-                    <img src="https://www.pratilipi.com/favicon.ico" alt="Pratilipi Icon" height={100} width={100} />
+                    <img
+                        src="https://www.pratilipi.com/favicon.ico"
+                        alt="Pratilipi Icon"
+                        height={100}
+                        width={100}
+                    />
                 </a>
                 <Space align="center" size="middle">
                     <a

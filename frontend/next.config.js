@@ -1,10 +1,6 @@
-const withPlugins = require("next-compose-plugins");
-const webpack = require("webpack");
-const { parsed: myEnv } = require("dotenv").config();
 module.exports = {
-    webpack(config) {
-        config.plugins.push(new webpack.EnvironmentPlugin(myEnv));
-        return config;
+    publicRuntimeConfig: {
+        NEXT_PUBLIC_USER_BACKEND: process.env.NEXT_PUBLIC_USER_BACKEND,
+        NEXT_PUBLIC_CONTENT_BACKEND: process.env.NEXT_PUBLIC_CONTENT_BACKEND,
     },
 };
-// module.exports = withPlugins([], {});
