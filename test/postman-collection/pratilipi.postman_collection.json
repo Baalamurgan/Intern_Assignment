@@ -14,7 +14,7 @@
 				{
 					"name": "Signup",
 					"request": {
-						"url": "localhost:5001/api/signup",
+						"url": "localhost:8080/api/user/signup",
 						"method": "POST",
 						"header": [
 							{
@@ -25,7 +25,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"userId\":\"baalamurgn2307@gmail.com\",\"password\":\"aasdasdsd\"}"
+							"raw": "{\"userId\":\"baalamurasdsadgn2307@gmail.com\",\"password\":\"aasdasdasdsa@@##3Fsd\"}"
 						},
 						"description": ""
 					},
@@ -34,7 +34,7 @@
 				{
 					"name": "User",
 					"request": {
-						"url": "localhost:5001/api/user/6202b984061efd0f6c1d6be2",
+						"url": "localhost:8080/api/user/user/62068ffe9bb9987d76228011",
 						"method": "GET",
 						"header": [],
 						"body": {},
@@ -45,7 +45,7 @@
 				{
 					"name": "Users",
 					"request": {
-						"url": "localhost:5001/api/users",
+						"url": "localhost:8080/api/user/users",
 						"method": "GET",
 						"header": [],
 						"body": {},
@@ -56,7 +56,7 @@
 				{
 					"name": "Update",
 					"request": {
-						"url": "localhost:5001/api/updateLike/61fffb84240f2eb998286059/62014ad84dd470e8103186c5",
+						"url": "localhost:8080/api/user/updateLike/620695e58adf46203cd7bf10/620695f7d8447e6f62bd5dbf",
 						"method": "PUT",
 						"header": [],
 						"body": {},
@@ -67,7 +67,7 @@
 				{
 					"name": "UploadUsers",
 					"request": {
-						"url": "localhost:5001/api/uploadUsers",
+						"url": "localhost:8080/api/user/uploadUsers",
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -75,9 +75,9 @@
 							"formdata": [
 								{
 									"key": "usersCSV",
-									"value": "",
 									"description": "",
-									"type": "file"
+									"type": "file",
+									"src": "UsersSample.csv"
 								}
 							]
 						},
@@ -94,7 +94,7 @@
 				{
 					"name": "Book",
 					"request": {
-						"url": "localhost:5002/api/content",
+						"url": "localhost:8080/api/content/content",
 						"method": "POST",
 						"header": [
 							{
@@ -105,7 +105,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\": \"Book1\",\n\t\"story\": \"This is Book1 and its story\",\n\t\"userId\": \"baalamug@gmail.com\"\n}"
+							"raw": "{\n\t\"title\": \"Book3\",\n\t\"story\": \"This is Book1 and its story\",\n\t\"userId\": \"baalamug@gmail.com\"\n}"
 						},
 						"description": ""
 					},
@@ -114,7 +114,7 @@
 				{
 					"name": "Update",
 					"request": {
-						"url": "localhost:5002/updateContent/61fffb84240f2eb998286059",
+						"url": "localhost:8080/api/content/updateContent/620695e58adf46203cd7bf10",
 						"method": "PUT",
 						"header": [
 							{
@@ -135,7 +135,7 @@
 				{
 					"name": "UploadContents",
 					"request": {
-						"url": "localhost:5002/api/uploadContents",
+						"url": "localhost:8080/api/content/uploadContents",
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -156,7 +156,7 @@
 				{
 					"name": "Book",
 					"request": {
-						"url": "localhost:5002/api/content/6201710a80a59275d95c3619",
+						"url": "localhost:8080/api/content/content/62068fe71c27a742559a4ee6",
 						"method": "GET",
 						"header": [],
 						"body": {},
@@ -167,7 +167,7 @@
 				{
 					"name": "Top Contents",
 					"request": {
-						"url": "localhost:5002/api/topcontents",
+						"url": "localhost:8080/api/content/topcontents",
 						"method": "GET",
 						"header": [],
 						"body": {},
